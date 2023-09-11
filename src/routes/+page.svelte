@@ -1,6 +1,7 @@
 <script>
     import "../css/reset.css";
     import "../css/style.css";
+    import {fade, fly, scale} from "svelte/transition";
 
     let todoTitle = "";
     let todoId = 4;
@@ -105,8 +106,8 @@
 
         {#if todos.length > 0}
             <ul class="todo-list">
-                {#each filteredTodos as todo}
-                    <li class="todo-item-container">
+                {#each filteredTodos as todo (todo.id)}
+                    <li class="todo-item-container" in:fly={{ x:100, duration: 200}} out:fade>
                         <div class="todo-item">
                             <input type="checkbox" bind:checked={todo.isComplete}/>
                             {#if !todo.isEditing}
@@ -117,7 +118,7 @@
                                         class="todo-item-label"
                                         class:line-through={todo.isComplete}
                                 >{todo.title}</span>
-                                {:else}
+                            {:else}
                                 <input
                                         type="text"
                                         class="todo-item-input"
@@ -152,7 +153,15 @@
                     <button on:click={checkAllTodos} class="button">Check All</button>
                 </div>
 
-                <span>{remainingTodos} items remaining</span>
+<!--                <span>{remainingTodos} items remaining</span>-->
+                <div>
+                    {#key remainingTodos}
+                    <span style="display: inline-block" in:fly={{ y: -20 }}>
+                        {remainingTodos}
+                    </span>
+                    {/key}
+                    <span>items remaining</span>
+                </div>
             </div>
 
             <div class="other-buttons-container">
@@ -181,7 +190,7 @@
                 </div>
             </div>
         {:else }
-            <div class="no-todos-container">
+            <div class="no-todos-container" transition:fade={{ delay: 400 }}>
                 <div class="no-todos-svg-container">
                     <svg
                             xmlns="http://www.w3.org/2000/svg"
