@@ -1,12 +1,19 @@
 <script>
-    import { createEventDispatcher } from "svelte";
-    const dispatch = createEventDispatcher();
+    import { todos } from "./stores/TodosStore";
     let todoTitle = "";
+    let todoId = 4;
     function addTodo() {
-        dispatch("todoAdded", {
-            todoTitle,
-        });
+        todos.update((todos) => [
+            ...todos,
+            {
+                id: todoId,
+                title: todoTitle,
+                isComplete: false,
+                isEditing: false,
+            },
+        ]);
         todoTitle = "";
+        todoId++;
     }
 </script>
 
